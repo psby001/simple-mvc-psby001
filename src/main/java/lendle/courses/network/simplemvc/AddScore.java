@@ -6,6 +6,7 @@
 package lendle.courses.network.simplemvc;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author lendle
+ * @author user
  */
-@WebServlet(name = "ShowScore", urlPatterns = {"/score"})
-public class ShowScore extends HttpServlet {
+@WebServlet(name = "AddScore", urlPatterns = {"/AddScore"})
+public class AddScore extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,21 +31,13 @@ public class ShowScore extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String id=request.getParameter("id");
-        String address=null;
-        Student student=Student.getStudent(id);
-        if(student == null){
-            address="/WEB-INF/score-report/UnknownStudent.jsp";
-        }else if(student.getScore()>=80){
-            address="/WEB-INF/score-report/HighScore.jsp";
-        }else if(student.getScore()>=60){
-            address="/WEB-INF/score-report/NormalScore.jsp";
-        }else{
-            address="/WEB-INF/score-report/LowScore.jsp";
-        }
-        //按照分數選擇頁面
-        request.setAttribute("student",student );
-        request.getRequestDispatcher(address).forward(request, response);
+        String name=request.getParameter("name");
+        double score=Double.parseDouble(request.getParameter("score"));
+        Student student = new Student(id,name,score);
+        Student.addStudent(id,student);
+        request.getRequestDispatcher("").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

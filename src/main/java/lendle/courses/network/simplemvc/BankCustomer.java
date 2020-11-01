@@ -64,6 +64,10 @@ public class BankCustomer {
         db.put("customer4", new BankCustomer("customer4", "name4", "name4", 8000));
     }
     
+    public static void addCustomer(String id,BankCustomer b){
+        db.put(id,b);
+    }
+    
     public static BankCustomer getCustomer(String id){
         return db.get(id);
     }

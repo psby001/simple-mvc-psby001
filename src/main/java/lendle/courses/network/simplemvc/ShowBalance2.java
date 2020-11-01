@@ -6,6 +6,7 @@
 package lendle.courses.network.simplemvc;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author lendle
+ * @author user
  */
-@WebServlet(name = "ShowScore", urlPatterns = {"/score"})
-public class ShowScore extends HttpServlet {
+@WebServlet(name = "ShowBalance2", urlPatterns = {"/ShowBalance2"})
+public class ShowBalance2 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,19 +32,20 @@ public class ShowScore extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id=request.getParameter("id");
+        BankCustomer customer=BankCustomer.getCustomer(id);
         String address=null;
-        Student student=Student.getStudent(id);
-        if(student == null){
-            address="/WEB-INF/score-report/UnknownStudent.jsp";
-        }else if(student.getScore()>=80){
-            address="/WEB-INF/score-report/HighScore.jsp";
-        }else if(student.getScore()>=60){
-            address="/WEB-INF/score-report/NormalScore.jsp";
+        if(customer==null){
+            address="/WEB-INF/bank-account/UnknownCustomer.jsp";
+        }else if(customer.getBalance()<0){
+            address="/WEB-INF/bank-account/NegativeBalance.jsp";
+            request.setAttribute("customer", customer);
+        }else if(customer.getBalance()>10000){
+            address="/WEB-INF/bank-account/HighBalance.jsp";
+            request.setAttribute("customer", customer);
         }else{
-            address="/WEB-INF/score-report/LowScore.jsp";
+            address="/WEB-INF/bank-account/NormalBalance.jsp";
+            request.setAttribute("customer", customer);
         }
-        //按照分數選擇頁面
-        request.setAttribute("student",student );
         request.getRequestDispatcher(address).forward(request, response);
     }
 
